@@ -1,4 +1,4 @@
-# as-gps-parent
+# Microservices Workshop Parent Page
 
 This is a "Parent" repository page link, that will help you to navigate the various micro services we use in “Tikal micorservices workshop”.
 Here are the links:
