@@ -3,6 +3,7 @@
 This is a "Parent" repository page link, that will help you to navigate the various micro services we use in “Tikal micorservices workshop”.
 
 How to run it :
+
 1. Run the EC2 instance (from the AWS console)
 2. ssh to the instance.
 3. As MongoDB is not running as a service run it as follow : mongod --dbpath /data/db --smallfiles &
