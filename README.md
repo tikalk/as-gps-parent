@@ -35,3 +35,7 @@ Here are the links:
 * https://github.com/tikalk/as-analytics
 * https://github.com/tikalk/as-segments-service
 * https://github.com/oferkafry/gps-tracker-ui
+* https://github.com/tikalk/as-device-manager
+* https://github.com/tikalk/as-geocoder-facade
+* https://github.com/tikalk/as-notifications
+
