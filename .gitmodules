@@ -1,0 +1,27 @@
+[submodule "as-gps-firehose"]
+	path = as-gps-firehose
+	url = https://github.com/tikalk/as-gps-firehose
+[submodule "as-gps-service"]
+	path = as-gps-service
+	url = https://github.com/tikalk/as-gps-service
+[submodule "as-management"]
+	path = as-management
+	url = https://github.com/tikalk/as-management
+[submodule "as-analytics"]
+	path = as-analytics
+	url = https://github.com/tikalk/as-analytics
+[submodule "as-segments-service"]
+	path = as-segments-service
+	url = https://github.com/tikalk/as-segments-service
+[submodule "as-device-manager"]
+	path = as-device-manager
+	url = https://github.com/tikalk/as-device-manager
+[submodule "as-geocoder-facade"]
+	path = as-geocoder-facade
+	url = https://github.com/tikalk/as-geocoder-facade
+[submodule "as-notifications"]
+	path = as-notifications
+	url = https://github.com/tikalk/as-notifications
+[submodule "gps-tracker-ui"]
+	path = gps-tracker-ui
+	url = https://github.com/oferkafry/gps-tracker-ui
