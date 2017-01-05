@@ -4,37 +4,39 @@ services:
     image: mongo
     ports:
       - "27017"
-#  zookeeper:
-#    image: wurstmeister/zookeeper:latest
-#    ports:
-#      - "2181:2181"
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - 2181:2181
+      - 2888
+      - 3888
+  kafka:
+    depends_on:
+      - "zookeeper"
+    image: "wurstmeister/kafka:latest"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "as-gps:1:1,as-raw-gps:1:1,as-segments:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "9092:9092"
   zkbrowser:
     depends_on:
-      - "kafka_zookeeper"
+      - "zookeeper"
     image: mijalko/zkbrowser:latest
     ports:
       - "4550:4550"
-  kafka_zookeeper:
-    image: spotify/kafka
-    environment:
-      ADVERTISED_HOST: kafka_zookeeper
-      ADVERTISED_PORT: 9092
-      AUTO_CREATE_TOPICS: "true"
-    ports:
-      - "9092"
-      - "2181"
-#  kafka:
-#    depends_on:
-#      - "zookeeper"
-#    image: "wurstmeister/kafka:0.8.2.1"
+#  kafka_zookeeper:
+#    image: spotify/kafka
 #    environment:
-#      KAFKA_ADVERTISED_HOST_NAME: kafka
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_CREATE_TOPICS: "as-gps,as-raw-gps,as-segments"
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
+#      ADVERTISED_HOST: kafka_zookeeper
+#      ADVERTISED_PORT: 9092
+#      AUTO_CREATE_TOPICS: "true"
 #    ports:
 #      - "9092"
+#      - "2181"
   redis:
     image: "redis"
     ports:
@@ -48,7 +50,8 @@ services:
       MYSQL_DATABASE: as-management
   as-device-manager:
     depends_on:
-      - kafka_zookeeper
+      - kafka
+      - as-gps-firehose
     image: "localhost:5000/tikal/as-device-manager:latest"
     ports:
       - "4080"
@@ -59,16 +62,16 @@ services:
     ports:
       - "7080"
   as-gps-firehose:
-    depends_on:
-      - as-device-manager
     image: "localhost:5000/tikal/as-gps-firehose:latest"
     ports:
       - "6080"
   as-gps-service:
     depends_on:
       - mongo
-      - kafka_zookeeper
+      - zookeeper
+      - kafka
       - as-management
+      - as-device-manager
     image: "localhost:5000/tikal/as-gps-service:latest"
     ports:
       - "8080"
@@ -81,14 +84,16 @@ services:
   as-notifications:
     depends_on:
       - as-management
-      - kafka_zookeeper
+      - zookeeper
+      - kafka
     image: "localhost:5000/tikal/as-notifications:latest"
     ports:
       - "5080"
   as-segments-service:
     depends_on:
       - mongo
-      - kafka_zookeeper
+      - zookeeper
+      - kafka
     image: "localhost:5000/tikal/as-segments-service:latest"
     ports:
       - "8888"
@@ -99,11 +104,11 @@ services:
       - as-segments-service
     image: "localhost:5000/tikal/gps-tracker-ui:latest"
     ports:
-      - "3000"
+      - "3000:3000"
   as-analytics:
     depends_on:
       - redis
-      - kafka_zookeeper
+      - kafka
       - as-geocoder-facade
     hostname: as-analytics
     image: "localhost:5000/tikal/as-analytics:latest"
