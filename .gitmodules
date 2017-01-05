@@ -22,6 +22,3 @@
 [submodule "as-notifications"]
 	path = as-notifications
 	url = https://github.com/tikalk/as-notifications
-[submodule "gps-tracker-ui"]
-	path = gps-tracker-ui
-	url = https://github.com/oferkafry/gps-tracker-ui
