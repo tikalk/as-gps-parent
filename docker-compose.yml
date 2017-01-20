@@ -4,28 +4,28 @@ services:
     image: mongo
     ports:
       - "27017"
-  as-zookeeper:
+  ft-zookeeper:
     image: wurstmeister/zookeeper:latest
     ports:
       - 2181:2181
       - 2888
       - 3888
-  as-kafka:
+  ft-kafka:
     depends_on:
-      - "as-zookeeper"
+      - "ft-zookeeper"
     image: "wurstmeister/kafka:latest"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: as-kafka
+      KAFKA_ADVERTISED_HOST_NAME: ft-kafka
       KAFKA_ADVERTISED_PORT: 9092
-      KAFKA_ZOOKEEPER_CONNECT: as-zookeeper:2181
-      KAFKA_CREATE_TOPICS: "as-gps:1:1,as-raw-gps:1:1,as-segments:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: ft-zookeeper:2181
+      KAFKA_CREATE_TOPICS: "ft-gps:1:1,ft-raw-gps:1:1,ft-segments:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "9092:9092"
   zkbrowser:
     depends_on:
-      - "as-zookeeper"
+      - "ft-zookeeper"
     image: mijalko/zkbrowser:latest
     ports:
       - "4550:4550"
@@ -38,7 +38,7 @@ services:
 #    ports:
 #      - "9092"
 #      - "2181"
-  as-redis:
+  ft-redis:
     image: "redis"
     ports:
       - "6379"
@@ -56,68 +56,68 @@ services:
 #      - mongo
 #      - zookeeper
 #      - kafka
-  as-device-manager:
+  ft-device-manager:
     depends_on:
-      - as-kafka
-      - as-gps-firehose
-    image: "docker-registry.tikalk.com:5000/tikal/as-device-manager:latest"
+      - ft-kafka
+      - ft-gps-firehose
+    image: "shelleg/ft-device-manager:latest"
     ports:
       - "4080"
-  as-geocoder-facade:
+  ft-geocoder-facade:
     depends_on:
-      - as-redis
-    image: "docker-registry.tikalk.com:5000/tikal/as-geocoder-facade:latest"
+      - ft-redis
+    image: "shelleg/ft-geocoder-facade:latest"
     ports:
       - "7080"
-  as-gps-firehose:
-    image: "docker-registry.tikalk.com:5000/tikal/as-gps-firehose:latest"
+  ft-gps-firehose:
+    image: "shelleg/ft-gps-firehose:latest"
     ports:
       - "6080"
-  as-gps-service:
+  ft-gps-service:
     depends_on:
       - mongo
-      - as-zookeeper
-      - as-kafka
-      - as-management
-      - as-device-manager
-    image: "docker-registry.tikalk.com:5000/tikal/as-gps-service:latest"
+      - ft-zookeeper
+      - ft-kafka
+      - ft-management
+      - ft-device-manager
+    image: "shelleg/ft-gps-service:latest"
     ports:
       - "8080"
-  as-management:
+  ft-management:
     depends_on:
       - mysql
-    image: "docker-registry.tikalk.com:5000/tikal/as-management:latest"
+    image: "shelleg/ft-management:latest"
     ports:
       - "3080"
-  as-notifications:
+  ft-notifications:
     depends_on:
-      - as-management
-      - as-segments-service
-      - as-zookeeper
-      - as-kafka
-    image: "docker-registry.tikalk.com:5000/tikal/as-notifications:latest"
+      - ft-management
+      - ft-segments-service
+      - ft-zookeeper
+      - ft-kafka
+    image: "shelleg/ft-notifications:latest"
     ports:
       - "5080"
-  as-segments-service:
+  ft-segments-service:
     depends_on:
       - mongo
-      - as-zookeeper
-      - as-kafka
-    image: "docker-registry.tikalk.com:5000/tikal/as-segments-service:latest"
+      - ft-zookeeper
+      - ft-kafka
+    image: "shelleg/ft-segments-service:latest"
     ports:
       - "8888"
-  gps-tracker-ui:
+  ft-gps-tracker-ui:
     depends_on:
-      - as-management
-      - as-gps-service
-      - as-segments-service
-    image: "docker-registry.tikalk.com:5000/tikal/gps-tracker-ui:latest"
+      - ft-management
+      - ft-gps-service
+      - ft-segments-service
+    image: "shelleg/ft-gps-tracker-ui:latest"
     ports:
       - "3000:3000"
-  as-analytics:
+  ft-analytics:
     depends_on:
-      - as-redis
-      - as-kafka
-      - as-geocoder-facade
-    hostname: as-analytics
-    image: "docker-registry.tikalk.com:5000/tikal/as-analytics:latest"
+      - ft-redis
+      - ft-kafka
+      - ft-geocoder-facade
+    hostname: ft-analytics
+    image: "shelleg/ft-analytics:latest"

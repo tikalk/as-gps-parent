@@ -1,0 +1,516 @@
+#
+# Kafka/Zookeeper
+#
+
+# Kafka Service
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-kafka
+  labels:
+    service: ft-kafka
+spec:
+  ports:
+  - name: '9092'
+    protocol: TCP
+    port: 9092
+    targetPort: 9092
+  selector:
+    service: kafka-zookeeper
+status:
+  loadBalancer: {}
+
+# Zookeeper Service
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-zookeeper
+  labels:
+    service: ft-zookeeper
+spec:
+  ports:
+  - name: '2181'
+    protocol: TCP
+    port: 2181
+    targetPort: 2181
+  selector:
+    service: kafka-zookeeper
+status:
+  loadBalancer: {}
+
+# Zookeeper/Kafka deployment
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: kafka-zookeeper
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: kafka-zookeeper
+    spec:
+      containers:
+      - name: kafka-zookeeper
+        image: spotify/kafka
+        ports:
+        - containerPort: 9092
+          protocol: TCP
+        - containerPort: 2181
+          protocol: TCP
+        env:
+        - name: ADVERTISED_HOST
+          value: "ft-kafka"
+        - name: ADVERTISED_PORT
+          value: "9092"
+      restartPolicy: Always
+
+
+################################################
+# Mongo
+#
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mongo
+  labels:
+    service: mongo
+spec:
+  ports:
+  - name: '27017'
+    protocol: TCP
+    port: 27017
+    targetPort: 27017
+  selector:
+    service: mongo
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+      restartPolicy: Always
+#
+################################################
+
+
+################################################
+# Redis
+#
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-redis
+  labels:
+    service: ft-redis
+spec:
+  ports:
+  - name: '6379'
+    protocol: TCP
+    port: 6379
+    targetPort: 6379
+  selector:
+    service: redis
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-redis
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: ft-redis
+    spec:
+      containers:
+      - name: ft-redis
+        image: redis
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+  strategy: {}
+status: {}
+#
+################################################
+
+################################################
+# Mysql
+#
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql
+  labels:
+    service: mysql
+spec:
+  ports:
+  - name: '3306'
+    protocol: TCP
+    port: 3306
+    targetPort: 3306
+  selector:
+    service: mysql
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  template:
+    metadata:
+
+      labels:
+        service: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_DATABASE
+          value: ft-management
+      restartPolicy: Always
+#
+################################################
+
+################################################
+# ft-device-manager
+#
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-device-manager
+  labels:
+    service: ft-device-manager
+spec:
+  ports:
+  - name: '4080'
+    protocol: TCP
+    port: 4080
+    targetPort: 4080
+  selector:
+    service: ft-device-manager
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-device-manager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp:
+      labels:
+        service: ft-device-manager
+    spec:
+      containers:
+      - name: ft-device-manager
+        image: shelleg/tikal/ft-device-manager:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 4080
+          protocol: TCP
+      restartPolicy: Always
+#
+################################################
+
+################################################
+# ft-geocoder-facade
+#
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-geocoder-facade
+  labels:
+    service: ft-geocoder-facade
+spec:
+  ports:
+  - name: '7080'
+    protocol: TCP
+    port: 7080
+    targetPort: 7080
+  selector:
+    service: ft-geocoder-facade
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-geocoder-facade
+  creationTimestamp: 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: ft-geocoder-facade
+    spec:
+      containers:
+      - name: ft-geocoder-facade
+        image: shelleg/ft-geocoder-facade:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 7080
+          protocol: TCP
+      restartPolicy: Always
+#
+################################################
+
+################################################
+# ft-gps-firehose
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-gps-firehose
+  creationTimestamp:
+  labels:
+    service: ft-gps-firehose
+spec:
+  ports:
+  - name: '6080'
+    protocol: TCP
+    port: 6080
+    targetPort: 6080
+  selector:
+    service: ft-gps-firehose
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-gps-firehose
+  creationTimestamp: 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp: 
+      labels:
+        service: ft-gps-firehose
+    spec:
+      containers:
+      - name: ft-gps-firehose
+        image: shelleg/ft-gps-firehose:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 6080
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+#
+################################################
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-management
+  creationTimestamp: 
+  labels:
+    service: ft-management
+spec:
+  ports:
+  - name: '3080'
+    protocol: TCP
+    port: 3080
+    targetPort: 3080
+  selector:
+    service: ft-management
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-management
+  creationTimestamp: 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp: 
+      labels:
+        service: ft-management
+    spec:
+      containers:
+      - name: ft-management
+        image: shelleg/ft-management:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3080
+          protocol: TCP
+      restartPolicy: Always
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-notifications
+  labels:
+    service: ft-notifications
+spec:
+  ports:
+  - name: '5080'
+    protocol: TCP
+    port: 5080
+    targetPort: 5080
+  selector:
+    service: ft-notifications
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-notifications
+  creationTimestamp:
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: ft-notifications
+    spec:
+      containers:
+      - name: ft-notifications
+        image: shelleg/ft-notifications:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5080
+          protocol: TCP
+      restartPolicy: Always
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-segments-service
+  creationTimestamp: 
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp: 
+      labels:
+        service: ft-segments-service
+    spec:
+      containers:
+      - name: ft-segments-service
+        image: shelleg/ft-segments-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8888
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-analytics
+  creationTimestamp:
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp:
+      labels:
+        service: ft-analytics
+    spec:
+      containers:
+      - name: ft-analytics
+        image: shelleg/ft-analytics:latest
+        imagePullPolicy: IfNotPresent
+        resources: {}
+      restartPolicy: Always
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-gps-tracker-ui
+  creationTimestamp:
+  labels:
+    service: ft-gps-tracker-ui
+spec:
+  ports:
+  - name: '3000'
+    protocol: TCP
+    port: 3000
+    targetPort: 3000
+  selector:
+    service: ft-gps-tracker-ui
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ft-gps-tracker-ui
+  creationTimestamp:
+spec:
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp:
+      labels:
+        service: ft-gps-tracker-ui
+    spec:
+      containers:
+      - name: ft-gps-tracker-ui
+        image: shelleg/ft-gps-tracker-ui:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always

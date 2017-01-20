@@ -14,28 +14,28 @@ How to run it :
   * Make sure you have the three needed topics, by running:  `./bin/kafka-topics.sh --list --zookeeper localhost:2181`
   * If they are one of them is missing you can add them as follow
   ```
-  bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic as-gps
-  bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic as-raw-gps
-  bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic as-segments
+  bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic ft-gps
+  bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic ft-raw-gps
+  bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic ft-segments
  ```
 5. Run the UI node:
-  * cd /home/ec2-user/fleettracker/gps-tracker-ui
+  * cd /home/ec2-user/fleettracker/ft-gps-tracker-ui
   * nohup node server.js &
 6. Run all services
   * cd /home/ec2-user/fleettracker
   * ./run_all.sh 
 7. Run firehose
-  * cd /home/ec2-user/fleettracker/as-gps-firehose
+  * cd /home/ec2-user/fleettracker/ft-gps-firehose
   * ./run-bin/gps-firehose.sh
 Here are the links:
 
-* https://github.com/tikalk/as-gps-firehose
-* https://github.com/tikalk/as-gps-service
-* https://github.com/tikalk/as-management
-* https://github.com/tikalk/as-analytics
-* https://github.com/tikalk/as-segments-service
-* https://github.com/oferkafry/gps-tracker-ui
-* https://github.com/tikalk/as-device-manager
-* https://github.com/tikalk/as-geocoder-facade
-* https://github.com/tikalk/as-notifications
+* https://github.com/tikalk/ft-gps-firehose
+* https://github.com/tikalk/ft-gps-service
+* https://github.com/tikalk/ft-management
+* https://github.com/tikalk/ft-analytics
+* https://github.com/tikalk/ft-segments-service
+* https://github.com/tikalk/ft-gps-tracker-ui
+* https://github.com/tikalk/ft-device-manager
+* https://github.com/tikalk/ft-geocoder-facade
+* https://github.com/tikalk/ft-notifications
 
