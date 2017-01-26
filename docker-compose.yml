@@ -4,12 +4,14 @@ services:
     image: mongo
     ports:
       - "27017"
+    cpu_quota: 10000
   ft-zookeeper:
     image: wurstmeister/zookeeper:latest
     ports:
       - 2181:2181
       - 2888
       - 3888
+    cpu_quota: 10000
   ft-kafka:
     depends_on:
       - "ft-zookeeper"
@@ -19,10 +21,11 @@ services:
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: ft-zookeeper:2181
       KAFKA_CREATE_TOPICS: "ft-gps:1:1,ft-raw-gps:1:1,ft-segments:1:1"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "9092:9092"
+    cpu_quota: 10000
   zkbrowser:
     depends_on:
       - "ft-zookeeper"
@@ -38,10 +41,12 @@ services:
 #    ports:
 #      - "9092"
 #      - "2181"
+    cpu_quota: 10000
   ft-redis:
     image: "redis"
     ports:
       - "6379"
+    cpu_quota: 10000
   mysql:
     image: "mysql"
     ports:
@@ -49,6 +54,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: as-management
+    cpu_quota: 10000
 #  infra:
 #    depends_on:
 #      - redis
@@ -63,16 +69,19 @@ services:
     image: "shelleg/ft-device-manager:latest"
     ports:
       - "4080"
+    cpu_quota: 10000
   ft-geocoder-facade:
     depends_on:
       - ft-redis
     image: "shelleg/ft-geocoder-facade:latest"
     ports:
       - "7080"
+    cpu_quota: 10000
   ft-gps-firehose:
     image: "shelleg/ft-gps-firehose:latest"
     ports:
       - "6080"
+    cpu_quota: 10000
   ft-gps-service:
     depends_on:
       - mongo
@@ -82,13 +91,15 @@ services:
       - ft-device-manager
     image: "shelleg/ft-gps-service:latest"
     ports:
-      - "8080"
+      - "8088:8088"
+    cpu_quota: 10000
   ft-management:
     depends_on:
       - mysql
     image: "shelleg/ft-management:latest"
     ports:
-      - "3080"
+      - "3080:3080"
+    cpu_quota: 10000
   ft-notifications:
     depends_on:
       - ft-management
@@ -98,6 +109,7 @@ services:
     image: "shelleg/ft-notifications:latest"
     ports:
       - "5080"
+    cpu_quota: 10000
   ft-segments-service:
     depends_on:
       - mongo
@@ -105,7 +117,8 @@ services:
       - ft-kafka
     image: "shelleg/ft-segments-service:latest"
     ports:
-      - "8888"
+      - "9080:9080"
+    cpu_quota: 10000
   ft-gps-tracker-ui:
     depends_on:
       - ft-management
@@ -114,6 +127,12 @@ services:
     image: "shelleg/ft-gps-tracker-ui:latest"
     ports:
       - "3000:3000"
+    environment:
+#      MANAGEMENT_HOST: 10.40.6.7
+#      GPS_HOST: 10.40.6.7
+#      SEGMENT_HOST: 10.40.6.7
+#      EVENT_HOST: 10.40.6.7
+    cpu_quota: 10000
   ft-analytics:
     depends_on:
       - ft-redis
@@ -121,3 +140,6 @@ services:
       - ft-geocoder-facade
     hostname: ft-analytics
     image: "shelleg/ft-analytics:latest"
+    cpu_shares: 10
+#    cpu_quota: 10000
+#    cpuset: 0,1

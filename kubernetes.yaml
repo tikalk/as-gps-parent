@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
       - name: kafka-zookeeper
-        image: spotify/kafka
+        image: spotify/kafkaproxy
         ports:
         - containerPort: 9092
           protocol: TCP
@@ -66,8 +66,48 @@ spec:
           value: "ft-kafka"
         - name: ADVERTISED_PORT
           value: "9092"
+#        - name: TOPICS
+#          value: "ft-gps,ft-raw-gps,ft-segments"
       restartPolicy: Always
 
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: zkbrowser
+  labels:
+    service: zkbrowser
+spec:
+  ports:
+  - name: '4550'
+    protocol: TCP
+    port: 4550
+    targetPort: 4550
+  selector:
+    service: zkbrowser
+status:
+  loadBalancer: {}
+
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: zkbrowser
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        service: zkbrowser
+    spec:
+      containers:
+      - name: zkbrowser
+        image: mijalko/zkbrowser:latest
+        ports:
+        - containerPort: 4550
+          protocol: TCP
+      restartPolicy: Always
 
 ################################################
 # Mongo
@@ -244,7 +284,7 @@ spec:
     spec:
       containers:
       - name: ft-device-manager
-        image: shelleg/tikal/ft-device-manager:latest
+        image: shelleg/ft-device-manager:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 4080
