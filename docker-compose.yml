@@ -127,7 +127,7 @@ services:
     image: "shelleg/ft-gps-tracker-ui:latest"
     ports:
       - "3000:3000"
-    environment:
+#    environment:
 #      MANAGEMENT_HOST: 10.40.6.7
 #      GPS_HOST: 10.40.6.7
 #      SEGMENT_HOST: 10.40.6.7
