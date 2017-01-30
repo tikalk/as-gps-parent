@@ -40,6 +40,208 @@ spec:
 status:
   loadBalancer: {}
 
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: zkbrowser
+  labels:
+    service: zkbrowser
+spec:
+  ports:
+  - name: '4550'
+    protocol: TCP
+    port: 4550
+    targetPort: 4550
+  selector:
+    service: zkbrowser
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mongo
+  labels:
+    service: mongo
+spec:
+  ports:
+  - name: '27017'
+    protocol: TCP
+    port: 27017
+    targetPort: 27017
+  selector:
+    service: mongo
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-redis
+  labels:
+    service: ft-redis
+spec:
+  ports:
+  - name: '6379'
+    protocol: TCP
+    port: 6379
+    targetPort: 6379
+  selector:
+    service: redis
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mysql
+  labels:
+    service: mysql
+spec:
+  ports:
+  - name: '3306'
+    protocol: TCP
+    port: 3306
+    targetPort: 3306
+  selector:
+    service: mysql
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-device-manager
+  labels:
+    service: ft-device-manager
+spec:
+  ports:
+  - name: '4080'
+    protocol: TCP
+    port: 4080
+    targetPort: 4080
+  selector:
+    service: ft-device-manager
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-geocoder-facade
+  labels:
+    service: ft-geocoder-facade
+spec:
+  ports:
+  - name: '7080'
+    protocol: TCP
+    port: 7080
+    targetPort: 7080
+  selector:
+    service: ft-geocoder-facade
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-gps-firehose
+  creationTimestamp:
+  labels:
+    service: ft-gps-firehose
+spec:
+  ports:
+  - name: '6080'
+    protocol: TCP
+    port: 6080
+    targetPort: 6080
+  selector:
+    service: ft-gps-firehose
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-gps-service
+  creationTimestamp:
+  labels:
+    service: ft-gps-service
+spec:
+  ports:
+  - name: '8088'
+    protocol: TCP
+    port: 8088
+    targetPort: 8088
+  selector:
+    service: ft-gps-service
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-management
+  creationTimestamp:
+  labels:
+    service: ft-management
+spec:
+  ports:
+  - name: '3080'
+    protocol: TCP
+    port: 3080
+    targetPort: 3080
+  selector:
+    service: ft-management
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-notifications
+  labels:
+    service: ft-notifications
+spec:
+  ports:
+  - name: '5080'
+    protocol: TCP
+    port: 5080
+    targetPort: 5080
+  selector:
+    service: ft-notifications
+status:
+  loadBalancer: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ft-gps-tracker-ui
+  creationTimestamp:
+  labels:
+    service: ft-gps-tracker-ui
+spec:
+  ports:
+  - name: '3000'
+    protocol: TCP
+    port: 3000
+    targetPort: 3000
+  selector:
+    service: ft-gps-tracker-ui
+status:
+  loadBalancer: {}
+
 # Zookeeper/Kafka deployment
 ---
 kind: Deployment
@@ -71,23 +273,6 @@ spec:
       restartPolicy: Always
 
 
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: zkbrowser
-  labels:
-    service: zkbrowser
-spec:
-  ports:
-  - name: '4550'
-    protocol: TCP
-    port: 4550
-    targetPort: 4550
-  selector:
-    service: zkbrowser
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -112,23 +297,6 @@ spec:
 ################################################
 # Mongo
 #
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: mongo
-  labels:
-    service: mongo
-spec:
-  ports:
-  - name: '27017'
-    protocol: TCP
-    port: 27017
-    targetPort: 27017
-  selector:
-    service: mongo
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -156,23 +324,6 @@ spec:
 ################################################
 # Redis
 #
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: ft-redis
-  labels:
-    service: ft-redis
-spec:
-  ports:
-  - name: '6379'
-    protocol: TCP
-    port: 6379
-    targetPort: 6379
-  selector:
-    service: redis
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -202,23 +353,6 @@ status: {}
 ################################################
 # Mysql
 #
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: mysql
-  labels:
-    service: mysql
-spec:
-  ports:
-  - name: '3306'
-    protocol: TCP
-    port: 3306
-    targetPort: 3306
-  selector:
-    service: mysql
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -243,7 +377,7 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: root
         - name: MYSQL_DATABASE
-          value: ft-management
+          value: as-management
       restartPolicy: Always
 #
 ################################################
@@ -251,23 +385,6 @@ spec:
 ################################################
 # ft-device-manager
 #
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: ft-device-manager
-  labels:
-    service: ft-device-manager
-spec:
-  ports:
-  - name: '4080'
-    protocol: TCP
-    port: 4080
-    targetPort: 4080
-  selector:
-    service: ft-device-manager
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -296,23 +413,6 @@ spec:
 ################################################
 # ft-geocoder-facade
 #
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: ft-geocoder-facade
-  labels:
-    service: ft-geocoder-facade
-spec:
-  ports:
-  - name: '7080'
-    protocol: TCP
-    port: 7080
-    targetPort: 7080
-  selector:
-    service: ft-geocoder-facade
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -340,24 +440,6 @@ spec:
 
 ################################################
 # ft-gps-firehose
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: ft-gps-firehose
-  creationTimestamp:
-  labels:
-    service: ft-gps-firehose
-spec:
-  ports:
-  - name: '6080'
-    protocol: TCP
-    port: 6080
-    targetPort: 6080
-  selector:
-    service: ft-gps-firehose
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -385,24 +467,37 @@ spec:
 #
 ################################################
 
+
+################################################
+# ft-gps-service
 ---
-kind: Service
-apiVersion: v1
+kind: Deployment
+apiVersion: extensions/v1beta1
 metadata:
-  name: ft-management
-  creationTimestamp: 
-  labels:
-    service: ft-management
+  name: ft-gps-service
+  creationTimestamp:
 spec:
-  ports:
-  - name: '3080'
-    protocol: TCP
-    port: 3080
-    targetPort: 3080
-  selector:
-    service: ft-management
-status:
-  loadBalancer: {}
+  replicas: 1
+  template:
+    metadata:
+      creationTimestamp:
+      labels:
+        service: ft-gps-service
+    spec:
+      containers:
+      - name: ft-gps-service
+        image: shelleg/ft-gps-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8088
+          protocol: TCP
+        resources: {}
+      restartPolicy: Always
+#
+################################################
+
+
+
 
 ---
 kind: Deployment
@@ -427,23 +522,6 @@ spec:
           protocol: TCP
       restartPolicy: Always
 
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: ft-notifications
-  labels:
-    service: ft-notifications
-spec:
-  ports:
-  - name: '5080'
-    protocol: TCP
-    port: 5080
-    targetPort: 5080
-  selector:
-    service: ft-notifications
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -512,24 +590,6 @@ spec:
         resources: {}
       restartPolicy: Always
 
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: ft-gps-tracker-ui
-  creationTimestamp:
-  labels:
-    service: ft-gps-tracker-ui
-spec:
-  ports:
-  - name: '3000'
-    protocol: TCP
-    port: 3000
-    targetPort: 3000
-  selector:
-    service: ft-gps-tracker-ui
-status:
-  loadBalancer: {}
 
 ---
 kind: Deployment
